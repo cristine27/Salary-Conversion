@@ -13,11 +13,11 @@ class Salary extends BaseController
         $apikey = '5516ea203aab5dbbd348';
         $query =  "IDR_USD";
 
-        // change to the free URL if you're using the free version
         $json = file_get_contents("https://free.currconv.com/api/v7/convert?q={$query}&compact=ultra&apiKey={$apikey}");
         $obj = json_decode($json, true);
         $val = floatval($obj["$query"]);
 
+        // get json data
         $url = "http://jsonplaceholder.typicode.com/users";
         $get_url = file_get_contents($url);
 
@@ -48,11 +48,4 @@ class Salary extends BaseController
         ];
         return view('pages/salary_page', $data);
     }
-
-    public function convertCurrency($from_currency, $to_currency)
-    {
-    }
-
-    //uncomment to test
-    //echo convertCurrency(10, 'USD', 'PHP');
 }
