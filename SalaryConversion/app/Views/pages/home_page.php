@@ -17,7 +17,7 @@
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-primary btn-sm d-inline p-2 mx-3" href="../Salary" role="button">Salary Conversion</a>
                             <a class="btn btn-primary btn-sm d-inline p-2 mx-3" href="../Sensor" role="button">Sensors Aggregation</a>
-                            <a class="btn btn-primary btn-sm d-inline p-2 mx-3" href="#" role="button">Sensors Aggregation Simulation</a>
+                            <a class="btn btn-primary btn-sm d-inline p-2 mx-3" href="../Sensor/Sensing" role="button">Sensors Aggregation Simulation</a>
                         </div>
                     </div>
                 </div>

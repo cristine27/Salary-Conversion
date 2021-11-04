@@ -5,6 +5,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
+            <button type="button" class="btn btn-info float-right m-2 <?= ($flag) ? 'visible' : 'invisible'; ?>">BUTTON</button>
             <h1>Sensor Aggregation</h1>
             <?php for ($i = 0; $i < 3; $i++) { ?>
                 <?php
@@ -141,7 +142,7 @@
                 'rgba(255,99,132,0,8)',
             ],
         }],
-        labels: label_waktu1,
+        labels: label_waktu1
     }
 
     var hum_room1 = {
