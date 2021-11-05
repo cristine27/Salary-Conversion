@@ -65,3 +65,4 @@ Solution :
 IDEAS OR CONSIDERATION : 
 1.	This project is only using 1 port ( localhost:8080 ) because codeigniter4 framework that I used to built this project already include frontend and backend. 
 2.	for sensor problem, the data can be stored at database. So we can make a sensor model in the project that can be used to query the data. For example if we want to get room1 data we could query all the data where the roomArea is roomArea1. If db is used to solve the problem will be much effective because we don’t need to fetch the data with looping.
+3. Because I failed to store the sensor data in DB, I just group the data based on the room by a loop. So the chart just have temperature or humidity data for each timestamp.
