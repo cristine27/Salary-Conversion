@@ -283,13 +283,13 @@ class Sensor extends BaseController
             }
 
             $json_res = json_encode($this->sensing_data);
-            file_put_contents("New_SensingData.json", $json_res);
+            file_put_contents("../public/json/New_SensingData.json", $json_res);
 
             $this->convert_data($this->sensing_data);
         }
 
         $data = [
-            'title' => 'Sensor Aggregation',
+            'title' => 'Sensor Aggregation Simulation',
             'room1_temp' => $this->room1_temp,
             'room2_temp' => $this->room2_temp,
             'room3_temp' => $this->room3_temp,

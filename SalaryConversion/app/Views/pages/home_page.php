@@ -2,7 +2,7 @@
 
 <?= $this->section('content'); ?>
 
-<div class="container">
+<div class="container m-3">
     <div class="row">
         <div class="col">
             <div class="card" style="width: 30rem;">
