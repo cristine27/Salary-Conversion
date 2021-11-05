@@ -9,13 +9,8 @@ class Salary extends BaseController
 {
     public function index()
     {
-        // get idr to usd concuracy
-        $apikey = '5516ea203aab5dbbd348';
         $query =  "IDR_USD";
-
-        $json = file_get_contents("https://free.currconv.com/api/v7/convert?q={$query}&compact=ultra&apiKey={$apikey}");
-        $obj = json_decode($json, true);
-        $val = floatval($obj["$query"]);
+        $val = $this->get_usd($query);
 
         // get json data
         $url = "http://jsonplaceholder.typicode.com/users";
@@ -34,8 +29,8 @@ class Salary extends BaseController
             $idx = 0;
             foreach ($salary_data as $s) {
                 if ($d['id'] == $s[$idx]['id']) {
-                    $temp['salaryIDR'] = $s[$idx]['salaryInIDR'];
-                    $temp['salaryUSD'] = (int)$s[$idx]['salaryInIDR'] * $val;
+                    $temp['salaryIDR'] = number_format($s[$idx]['salaryInIDR']);
+                    $temp['salaryUSD'] = number_format((int)$s[$idx]['salaryInIDR'] * $val);
                 }
                 $idx++;
             }
@@ -47,5 +42,17 @@ class Salary extends BaseController
             'dataUser' => $summary,
         ];
         return view('pages/salary_page', $data);
+    }
+
+    public function get_usd($query)
+    {
+        // get idr to usd concuracy
+        $apikey = '5516ea203aab5dbbd348';
+
+        $json = file_get_contents("https://free.currconv.com/api/v7/convert?q={$query}&compact=ultra&apiKey={$apikey}");
+        $obj = json_decode($json, true);
+        $val = floatval($obj["$query"]);
+
+        return $val;
     }
 }

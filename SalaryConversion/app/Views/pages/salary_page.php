@@ -5,8 +5,8 @@
 <div class="contaier">
     <div class="row">
         <div class="col">
-            <h1>salary page</h1>
-
+            <h1 style="justify-content: center;">salary page</h1>
+            <a class="btn btn-info d-inline btn-sm float-right m-3" href="/Home/">Back</a>
             <div class="containter">
                 <table class="table table-striped">
                     <thead>

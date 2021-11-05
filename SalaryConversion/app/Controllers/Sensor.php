@@ -10,6 +10,7 @@ use PhpParser\Node\Expr\Cast\Array_;
 class Sensor extends BaseController
 {
     protected $sensorModel;
+    protected $sensor_data;
     protected $data_room1;
     protected $data_room2;
     protected $data_room3;
@@ -21,20 +22,89 @@ class Sensor extends BaseController
     protected $room3_temp;
     protected $room3_hum;
 
+    protected $flag;
+
+    protected $sensing_data;
+
     public function __construct()
     {
         $this->sensorModel = new sensorModel();
+        $this->sensing_data = [];
+        $this->flag = 0;
+        $this->sensor_data = json_decode(file_get_contents('../public/json/sensor_data.json'), true);
+        $this->convert_data($this->sensor_data);
+    }
+
+    public function index()
+    {
+        $data = [
+            'title' => 'Sensor Aggregation',
+            'room1_temp' => $this->room1_temp,
+            'room2_temp' => $this->room2_temp,
+            'room3_temp' => $this->room3_temp,
+            'room1_hum' => $this->room1_hum,
+            'room2_hum' => $this->room2_hum,
+            'room3_hum' => $this->room3_hum,
+            'data_room1' => $this->data_room1,
+            'data_room2' => $this->data_room2,
+            'data_room3' => $this->data_room3,
+            'flag' => $this->flag,
+            'click' => 0
+        ];
+
+        return view('pages/sensor_agre', $data);
+    }
+
+    public function convert_data($data)
+    {
+        $this->room1_hum = [];
+        $this->room1_temp = [];
+        $this->room2_hum = [];
+        $this->room2_temp = [];
+        $this->room3_hum = [];
+        $this->room3_temp = [];
+
         $this->data_room1 = [];
         $this->data_room2 = [];
         $this->data_room3 = [];
 
-        $sensor_data = json_decode(file_get_contents('../public/json/sensor_data.json'), true);
-        $data_room1 = [];
-        $data_room2 = [];
-        $data_room3 = [];
-
-        foreach ($sensor_data as $row) {
-            foreach ($row as $r) {
+        if ($this->flag == 0) {
+            foreach ($data as $row) {
+                foreach ($row as $r) {
+                    if ($r['roomArea'] === 'roomArea1') {
+                        $arrInsert = [
+                            "id" => $r['id'],
+                            "temperature" => $r['temperature'],
+                            "humidity" => $r['humidity'],
+                            "roomArea" => $r['roomArea'],
+                            "timeStamp" => $r['timestamp'],
+                        ];
+                        array_push($this->data_room1, $arrInsert);
+                    }
+                    if ($r['roomArea'] === 'roomArea2') {
+                        $arrInsert = [
+                            "id" => $r['id'],
+                            "temperature" => $r['temperature'],
+                            "humidity" => $r['humidity'],
+                            "roomArea" => $r['roomArea'],
+                            "timeStamp" => $r['timestamp'],
+                        ];
+                        array_push($this->data_room2, $arrInsert);
+                    }
+                    if ($r['roomArea'] === 'roomArea3') {
+                        $arrInsert = [
+                            "id" => $r['id'],
+                            "temperature" => $r['temperature'],
+                            "humidity" => $r['humidity'],
+                            "roomArea" => $r['roomArea'],
+                            "timeStamp" => $r['timestamp'],
+                        ];
+                        array_push($this->data_room3, $arrInsert);
+                    }
+                }
+            }
+        } else {
+            foreach ($data as $r) {
                 if ($r['roomArea'] === 'roomArea1') {
                     $arrInsert = [
                         "id" => $r['id'],
@@ -67,6 +137,7 @@ class Sensor extends BaseController
                 }
             }
         }
+
 
         // data min, max, med, av for room1
         $min_room1_temp = min(array_column($this->data_room1, 'temperature'));
@@ -197,9 +268,26 @@ class Sensor extends BaseController
         array_push($this->room3_hum, $min_room3_hum, $max_room3_hum, $med_room3_hum, $av_room3_hum);
     }
 
-    public function index()
+    public function Sensing($click)
     {
-        $flag = 0;
+        $this->flag = 1;
+
+        if ($click) {
+            $i = 0;
+            while ($i < 100) {
+                $this->start_sense();
+                $i++;
+                if (!$click) {
+                    break;
+                }
+            }
+
+            $json_res = json_encode($this->sensing_data);
+            file_put_contents("New_SensingData.json", $json_res);
+
+            $this->convert_data($this->sensing_data);
+        }
+
         $data = [
             'title' => 'Sensor Aggregation',
             'room1_temp' => $this->room1_temp,
@@ -211,27 +299,34 @@ class Sensor extends BaseController
             'data_room1' => $this->data_room1,
             'data_room2' => $this->data_room2,
             'data_room3' => $this->data_room3,
-            'flag' => $flag
+            'flag' => $this->flag,
+            'click' => $click
         ];
         return view('pages/sensor_agre', $data);
     }
 
-    public function Sensing()
+    public function start_sense()
     {
-        $flag = 1;
-        $data = [
-            'title' => 'Sensor Aggregation',
-            'room1_temp' => $this->room1_temp,
-            'room2_temp' => $this->room2_temp,
-            'room3_temp' => $this->room3_temp,
-            'room1_hum' => $this->room1_hum,
-            'room2_hum' => $this->room2_hum,
-            'room3_hum' => $this->room3_hum,
-            'data_room1' => $this->data_room1,
-            'data_room2' => $this->data_room2,
-            'data_room3' => $this->data_room3,
-            'flag' => $flag
+        $room = ['roomArea1', 'roomArea2', 'roomArea3'];
+        $temp_json = [];
+
+        $temp_id = rand(140, 500);
+        $temp_temperature = rand(15, 30);
+        $temp_humidity = rand(15, 30);
+        $temp_timestamp = mt_rand(1262055681, 1262055681);
+        $idx = rand(0, 2);
+        $temp_room = $room[$idx];
+
+        $temp_json = [
+            'id' => $temp_id,
+            'temperature' => $temp_temperature,
+            'humidity' => $temp_humidity,
+            'roomArea' => $temp_room,
+            'timestamp' => $temp_timestamp
         ];
-        return view('pages/sensor_agre', $data);
+
+        // array_push($temp_json, $temp_json);
+
+        array_push($this->sensing_data, $temp_json);
     }
 }

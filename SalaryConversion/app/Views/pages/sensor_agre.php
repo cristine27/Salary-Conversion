@@ -5,8 +5,9 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-info float-right m-2 <?= ($flag) ? 'visible' : 'invisible'; ?>">BUTTON</button>
-            <h1>Sensor Aggregation</h1>
+            <a class="btn btn-info d-inline btn-sm float-right m-3" href="/Home/">Back</a>
+            <a class="btn btn-primary d-inline btn-sm float-right m-3  <?= ($flag) ? 'visible' : 'invisible'; ?>" onclick="<?= ($click) ? $click = 0 : $click = 1; ?>" href="/Sensor/Sensing/<?= $click; ?>" role="button"><?= ($click) ? 'Start' : 'Stop'; ?></a>
+            <h1 style="justify-content: center;">Sensor Aggregation</h1>
             <?php for ($i = 0; $i < 3; $i++) { ?>
                 <?php
                 $data_temp = [];
